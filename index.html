@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sangam · Matrimonial for Indian Languages</title>
+  <style>
+    :root {
+      --bg: #0f172a;            /* slate-900 */
+      --card: #111827;          /* gray-900 */
+      --text: #e5e7eb;          /* gray-200 */
+      --muted: #9ca3af;         /* gray-400 */
+      --brand: #22c55e;         /* green-500 */
+      --brand-2: #a855f7;       /* violet-500 */
+      --focus: #f59e0b;         /* amber-500 */
+      --danger: #ef4444;        /* red-500 */
+      --ok: #10b981;            /* emerald-500 */
+      --border: #1f2937;        /* gray-800 */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+      background: linear-gradient(180deg, #0b1022, var(--bg)); color: var(--text);
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    .app { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
+
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(17,24,39,0.7); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex; align-items: center; gap: .6rem; padding: .9rem 1rem;
+    }
+    .logo {
+      inline-size: 36px; block-size: 36px; border-radius: 10px; background: radial-gradient(circle at 30% 30%, var(--brand), var(--brand-2));
+      display: grid; place-items: center; font-weight: 900; color: #0b0f1b; letter-spacing: .5px;
+    }
+    .brand h1 { font-size: 1.1rem; margin: 0; }
+    .brand small { color: var(--muted); display: block; font-weight: 500; margin-top: 2px; }
+
+    main { flex: 1; padding: 1rem; }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      border: 1px solid var(--border); border-radius: 16px; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .card h2 { margin-top: 0; }
+
+    .hero { text-align: center; padding: 1rem; }
+    .hero h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 .5rem 0; }
+    .hero p { color: var(--text); opacity: .9; font-size: 1rem; }
+
+    .pill {
+      display: inline-block; padding: .35rem .7rem; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: .85rem; margin: .25rem .25rem 0;
+    }
+
+    form { display: grid; gap: .9rem; }
+    .row { display: grid; gap: .9rem; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .row.two { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 880px) { .row.three { grid-template-columns: 1fr 1fr 1fr; } }
+
+    label { font-weight: 600; font-size: .95rem; }
+    input[type="text"], input[type="number"], input[type="file"], select, textarea {
+      width: 100%; padding: .75rem .85rem; border-radius: 12px; border: 1px solid var(--border);
+      background: #0b1222; color: var(--text);
+    }
+    select[multiple] { min-height: 8rem; }
+
+    .hint { font-size: .85rem; color: var(--muted); margin-top: .25rem; }
+
+    .btn {
+      appearance: none; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(34,197,94,.18), rgba(168,85,247,.18));
+      color: var(--text); padding: .8rem 1rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: transform .05s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+
+    .btn.secondary { background: transparent; }
+
+    .tabs {
+      position: sticky; bottom: 0; left: 0; right: 0; z-index: 20; background: rgba(17,24,39,0.75); backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+    }
+    .tabs .bar { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .tab-btn {
+      display: grid; place-items: center; padding: .85rem 0; color: var(--muted); font-weight: 700; letter-spacing: .2px; cursor: pointer; border-right: 1px solid var(--border);
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { color: var(--text); background: linear-gradient(180deg, rgba(34,197,94,.08), rgba(168,85,247,.06)); }
+
+    .legal { color: var(--muted); font-size: .92rem; }
+    .list { margin: .6rem 0; padding-left: 1.2rem; }
+
+    .filters { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
+
+    .alert { padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 12px; background: #0b1222; color: var(--muted); }
+
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <h1>Sangam</h1>
+          <small>Matrimonial for Indian language speakers</small>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Screen 1: Mission -->
+      <section id="screen-mission" class="screen active">
+        <div class="hero card">
+          <h2>Where language, values, and families come together</h2>
+          <p>
+            <strong>Sangam</strong> means “confluence.” Our mission is to bring kind, compatible people together across India’s rich tapestry of languages—Konkani, Tamil, Hindi, and many more—while honoring culture, consent, and safety.
+          </p>
+          <p>
+            We believe great matches start with respect. That’s why Sangam prioritizes verified profiles (your real face photo), thoughtful discovery by language and region, and privacy by design. You’re in control of what you share, with whom, and when.
+          </p>
+          <div class="pill">Inclusive across Indian languages</div>
+          <div class="pill">Privacy-first</div>
+          <div class="pill">Verified face photos</div>
+          <div class="pill">Filters that actually help</div>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <h2>How Sangam works (quick peek)</h2>
+          <ol class="list">
+            <li>Create your profile with name, age, city/state/country, languages you speak (multi-select), and a clear face photo.</li>
+            <li>Use filters to discover people who share your language(s) and region.</li>
+            <li>Control your visibility and connections. Report or block in one tap.</li>
+          </ol>
+          <div class="alert">This is a front-end prototype to help you visualize flows. Hook these forms to your backend (e.g., Django + PostgreSQL) later.</div>
+        </div>
+      </section>
+
+      <!-- Screen 2: Registration + Filters (prototype) -->
+      <section id="screen-register" class="screen">
+        <div class="card">
+          <h2>Create your Sangam profile</h2>
+          <form id="registerForm">
+            <div class="row two">
+              <div>
+                <label for="firstName">First name*</label>
+                <input id="firstName" name="firstName" type="text" required placeholder="e.g., Aisha" autocomplete="given-name" />
+              </div>
+              <div>
+                <label for="lastName">Last name*</label>
+                <input id="lastName" name="lastName" type="text" required placeholder="e.g., Rao" autocomplete="family-name" />
+              </div>
+            </div>
+
+            <div class="row three">
+              <div>
+                <label for="age">Age*</label>
+                <input id="age" name="age" type="number" min="18" max="99" required placeholder="e.g., 28" />
+                <div class="hint">You must be 18 or older.</div>
+              </div>
+              <div>
+                <label for="city">City*</label>
+                <input id="city" name="city" type="text" required placeholder="e.g., Bengaluru" autocomplete="address-level2" />
+              </div>
+              <div>
+                <label for="state">State/Province*</label>
+                <input id="state" name="state" type="text" required placeholder="e.g., Karnataka" autocomplete="address-level1" />
+              </div>
+            </div>
+
+            <div class="row two">
+              <div>
+                <label for="country">Country*</label>
+                <input id="country" name="country" type="text" required placeholder="e.g., India" autocomplete="country-name" />
+              </div>
+              <div>
+                <label for="languages">Languages you speak* (multi‑select)</label>
+                <select id="languages" name="languages" multiple required>
+                  <option value="Assamese">Assamese</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Gujarati">Gujarati</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Kannada">Kannada</option>
+                  <option value="Konkani">Konkani</option>
+                  <option value="Malayalam">Malayalam</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Odia">Odia</option>
+                  <option value="Punjabi">Punjabi</option>
+                  <option value="Sindhi">Sindhi</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Tulu">Tulu</option>
+                  <option value="Urdu">Urdu</option>
+                </select>
+                <div class="hint">Hold Ctrl/Cmd to select multiple on desktop. On mobile, tap each language.</div>
+              </div>
+            </div>
+
+            <div>
+              <label for="pfp">Profile photo* (must clearly show your face)</label>
+              <input id="pfp" name="pfp" type="file" accept="image/*" required />
+              <div class="hint">For safety and authenticity, Sangam requires a clear face photo. Blurry/obscured photos may be rejected.</div>
+            </div>
+
+            <div class="row two">
+              <button type="submit" class="btn">Save profile</button>
+              <button type="reset" class="btn secondary">Reset</button>
+            </div>
+
+            <div id="saveMsg" class="hint" style="display:none;">✅ Profile saved locally (prototype). In production, this submits to your backend.</div>
+          </form>
+
+          <!-- Prototype: Simple Filters (client-side only) -->
+          <div class="filters" id="filters" style="display:none;">
+            <h3 class="center">Find Matches (prototype)</h3>
+            <form id="filterForm">
+              <div class="row three">
+                <div>
+                  <label for="fCity">City</label>
+                  <input id="fCity" type="text" placeholder="e.g., Bengaluru" />
+                </div>
+                <div>
+                  <label for="fState">State/Province</label>
+                  <input id="fState" type="text" placeholder="e.g., Karnataka" />
+                </div>
+                <div>
+                  <label for="fCountry">Country</label>
+                  <input id="fCountry" type="text" placeholder="e.g., India" />
+                </div>
+              </div>
+
+              <div class="row two">
+                <div>
+                  <label for="fAgeMin">Min age</label>
+                  <input id="fAgeMin" type="number" min="18" max="99" placeholder="18" />
+                </div>
+                <div>
+                  <label for="fAgeMax">Max age</label>
+                  <input id="fAgeMax" type="number" min="18" max="99" placeholder="40" />
+                </div>
+              </div>
+
+              <div>
+                <label for="fLang">Language (any)</label>
+                <select id="fLang">
+                  <option value="">— Any —</option>
+                  <option>Assamese</option><option>Bengali</option><option>Gujarati</option>
+                  <option>Hindi</option><option>Kannada</option><option>Konkani</option>
+                  <option>Malayalam</option><option>Marathi</option><option>Odia</option>
+                  <option>Punjabi</option><option>Sindhi</option><option>Tamil</option>
+                  <option>Telugu</option><option>Tulu</option><option>Urdu</option>
+                </select>
+              </div>
+
+              <div class="row two">
+                <button type="submit" class="btn">Search</button>
+                <button type="button" class="btn secondary" id="btnClearFilters">Clear</button>
+              </div>
+            </form>
+            <div id="results" class="hint" style="margin-top:.6rem;">Results will appear here (mocked).</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Screen 3: Security / Privacy / Login -->
+      <section id="screen-security" class="screen">
+        <div class="card">
+          <h2>Security, Privacy & Account</h2>
+          <p class="legal">We’re serious about trust and safety.</p>
+          <ul class="list legal">
+            <li><strong>Face photo required:</strong> keeps profiles authentic and reduces catfishing.</li>
+            <li><strong>Privacy by default:</strong> your data is encrypted in transit; share only what you choose.</li>
+            <li><strong>Report & block:</strong> easy tools to keep your experience respectful.</li>
+            <li><strong>Data requests:</strong> export or delete your data any time.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <h3>Log in to your account (prototype)</h3>
+          <form id="loginForm">
+            <div class="row two">
+              <div>
+                <label for="loginId">Email or Phone</label>
+                <input id="loginId" type="text" placeholder="you@example.com or +91…" />
+              </div>
+              <div>
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="••••••••" />
+              </div>
+            </div>
+            <div class="row two">
+              <button type="submit" class="btn">Log in</button>
+              <button type="button" class="btn secondary" id="btnForgot">Forgot?</button>
+            </div>
+            <div id="loginMsg" class="hint" style="display:none;">Demo only. Hook to backend auth later.</div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom tabs -->
+    <nav class="tabs" aria-label="Bottom navigation">
+      <div class="bar">
+        <button class="tab-btn active" data-target="screen-mission">Mission</button>
+        <button class="tab-btn" data-target="screen-register">Register</button>
+        <button class="tab-btn" data-target="screen-security">Security</button>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const screens = document.querySelectorAll('.screen');
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.target;
+      screens.forEach(s => s.classList.toggle('active', s.id === id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+
+    // Registration prototype: save to localStorage and reveal filters
+    const regForm = document.getElementById('registerForm');
+    const saveMsg = document.getElementById('saveMsg');
+    const filters = document.getElementById('filters');
+
+    regForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(regForm);
+      const langs = Array.from(regForm.languages.selectedOptions).map(o => o.value);
+      const profile = {
+        firstName: fd.get('firstName'),
+        lastName: fd.get('lastName'),
+        age: Number(fd.get('age')),
+        city: fd.get('city'),
+        state: fd.get('state'),
+        country: fd.get('country'),
+        languages: langs,
+        // For prototype, we don't store the actual image bytes.
+      };
+      localStorage.setItem('sangamProfile', JSON.stringify(profile));
+      saveMsg.style.display = 'block';
+      filters.style.display = 'block';
+    });
+
+    // Simple client-side filter demo with a tiny mock dataset
+    const MOCK_PROFILES = [
+      { name: 'Ananya', last: 'Pai', age: 27, city: 'Mangaluru', state: 'Karnataka', country: 'India', languages: ['Konkani','Kannada'] },
+      { name: 'Rahul', last: 'Sharma', age: 30, city: 'Mumbai', state: 'Maharashtra', country: 'India', languages: ['Hindi','Marathi'] },
+      { name: 'Meera', last: 'Iyer', age: 29, city: 'Chennai', state: 'Tamil Nadu', country: 'India', languages: ['Tamil'] },
+      { name: 'Dev', last: 'Nair', age: 31, city: 'Kochi', state: 'Kerala', country: 'India', languages: ['Malayalam','Hindi'] },
+      { name: 'Aditi', last: 'Desai', age: 26, city: 'Ahmedabad', state: 'Gujarat', country: 'India', languages: ['Gujarati','Hindi'] },
+    ];
+
+    const filterForm = document.getElementById('filterForm');
+    const results = document.getElementById('results');
+    const btnClear = document.getElementById('btnClearFilters');
+    filterForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const city = document.getElementById('fCity').value.trim().toLowerCase();
+      const state = document.getElementById('fState').value.trim().toLowerCase();
+      const country = document.getElementById('fCountry').value.trim().toLowerCase();
+      const min = Number(document.getElementById('fAgeMin').value) || 0;
+      const max = Number(document.getElementById('fAgeMax').value) || 200;
+      const lang = document.getElementById('fLang').value;
+
+      const out = MOCK_PROFILES.filter(p => {
+        const okCity = city ? p.city.toLowerCase().includes(city) : true;
+        const okState = state ? p.state.toLowerCase().includes(state) : true;
+        const okCountry = country ? p.country.toLowerCase().includes(country) : true;
+        const okAge = p.age >= min && p.age <= max;
+        const okLang = lang ? p.languages.includes(lang) : true;
+        return okCity && okState && okCountry && okAge && okLang;
+      });
+
+      if (!out.length) {
+        results.textContent = 'No matches found (demo data). Try widening your filters.';
+      } else {
+        results.innerHTML = out.map(p => `• ${p.name} ${p.last}, ${p.age} — ${p.city}, ${p.state}, ${p.country} — speaks ${p.languages.join(', ')}`).join('<br>');
+      }
+    });
+
+    btnClear?.addEventListener('click', () => {
+      filterForm.reset();
+      results.textContent = 'Results will appear here (mocked).';
+    });
+
+    // Login prototype
+    const loginForm = document.getElementById('loginForm');
+    const loginMsg = document.getElementById('loginMsg');
+    loginForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loginMsg.style.display = 'block';
+    });
+
+    document.getElementById('btnForgot')?.addEventListener('click', () => {
+      alert('Demo: send password reset link via backend');
+    });
+  </script>
+</body>
+</html>
